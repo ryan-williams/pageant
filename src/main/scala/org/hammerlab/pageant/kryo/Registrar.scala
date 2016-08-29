@@ -2,11 +2,11 @@ package org.hammerlab.pageant.kryo
 
 import com.esotericsoftware.kryo.Kryo
 import org.apache.spark.serializer.KryoRegistrator
-import org.bdgenomics.adam.models.ReferenceRegion
 import org.bdgenomics.adam.serialization.ADAMKryoRegistrator
-import org.bdgenomics.formats.avro.AlignmentRecord
+import org.hammerlab.magic.rdd.sliding.SlidingRDD
 import org.hammerlab.pageant.bases.{Bases, Bases5, Bases5Serializer, BasesSerializer}
 import org.hammerlab.pageant.histogram.JointHistogram
+import org.hammerlab.pageant.suffixes.pdc3.{Joined, JoinedSerializer}
 
 class Registrar extends KryoRegistrator {
   override def registerClasses(kryo: Kryo): Unit = {
@@ -27,6 +27,7 @@ class Registrar extends KryoRegistrator {
 
     new ADAMKryoRegistrator().registerClasses(kryo)
 
+    SlidingRDD.register(kryo)
     JointHistogram.register(kryo)
 
     kryo.register(classOf[Array[String]])
@@ -42,12 +43,9 @@ class Registrar extends KryoRegistrator {
     kryo.register(Class.forName("scala.reflect.ClassTag$$anon$1"))
     kryo.register(classOf[java.lang.Class[_]])
 
+    kryo.register(classOf[Joined], new JoinedSerializer)
     kryo.register(classOf[scala.collection.mutable.WrappedArray.ofRef[_]])
     kryo.register(classOf[Array[Array[Byte]]])
-
-    kryo.register(classOf[Array[AlignmentRecord]])
-    kryo.register(classOf[ReferenceRegion])
-    kryo.register(classOf[Array[ReferenceRegion]])
 
     kryo.register(classOf[Array[Object]])
   }
