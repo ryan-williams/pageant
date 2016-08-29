@@ -5,6 +5,10 @@ import org.apache.spark.serializer.KryoRegistrator
 import org.bdgenomics.adam.serialization.ADAMKryoRegistrator
 import org.hammerlab.magic.rdd.sliding.SlidingRDD
 import org.hammerlab.pageant.bases.{Bases, Bases5, Bases5Serializer, BasesSerializer}
+import org.hammerlab.pageant.fm.blocks.{BWTBlock, BWTRun, BWTRunSerializer, FullBWTBlock, FullBWTBlockSerializer, RunLengthBWTBlock, RunLengthBWTBlockSerializer}
+import org.hammerlab.pageant.fm.finder.{PosNeedle, TNeedle}
+import org.hammerlab.pageant.fm.index.{NextStringPos, StringPos}
+import org.hammerlab.pageant.fm.utils.{Bounds, BoundsMap, Counts, CountsMap, HiBound, LoBound, Pos}
 import org.hammerlab.pageant.histogram.JointHistogram
 import org.hammerlab.pageant.suffixes.pdc3.{Joined, JoinedSerializer}
 
@@ -12,13 +16,33 @@ class Registrar extends KryoRegistrator {
   override def registerClasses(kryo: Kryo): Unit = {
     kryo.register(classOf[Bases], new BasesSerializer)
     kryo.register(classOf[Bases5], new Bases5Serializer)
+    kryo.register(classOf[Array[Bases5]])
+
+    kryo.register(classOf[BWTRun], new BWTRunSerializer)
+    kryo.register(classOf[Array[BWTBlock]])
+    kryo.register(classOf[FullBWTBlock], new FullBWTBlockSerializer)
+    kryo.register(classOf[RunLengthBWTBlock], new RunLengthBWTBlockSerializer)
+    kryo.register(classOf[Array[BWTRun]])
+    kryo.register(classOf[Array[Array[BWTRun]]])
+    kryo.register(classOf[Counts])
+    kryo.register(classOf[Array[Counts]])
+    kryo.register(classOf[CountsMap])
+    kryo.register(classOf[Pos])
+    kryo.register(classOf[Array[Pos]])
+    kryo.register(classOf[PosNeedle])
+    kryo.register(classOf[TNeedle])
+    kryo.register(classOf[LoBound])
+    kryo.register(classOf[HiBound])
+    kryo.register(classOf[Bounds])
+    kryo.register(classOf[BoundsMap])
+    kryo.register(classOf[StringPos])
+    kryo.register(classOf[NextStringPos])
     kryo.register(classOf[Vector[_]])
     kryo.register(classOf[Array[Vector[_]]])
     kryo.register(classOf[scala.collection.mutable.WrappedArray.ofLong])
     kryo.register(classOf[scala.collection.mutable.WrappedArray.ofByte])
     kryo.register(classOf[scala.collection.mutable.WrappedArray.ofChar])
     kryo.register(classOf[Array[Char]])
-    kryo.register(classOf[Array[Bases5]])
 
     // Tuple2[Long, Any], afaict?
     // "J" == Long (obviously). https://github.com/twitter/chill/blob/6d03f6976f33f6e2e16b8e254fead1625720c281/chill-scala/src/main/scala/com/twitter/chill/TupleSerializers.scala#L861
