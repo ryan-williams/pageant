@@ -59,7 +59,7 @@ $ $SPARK_HOME/bin/spark-submit \
  --persist-distributions (-v)      : When set, persist full PDF and CDF of coverage-depth histogram (default: false)
  --persist-joint-histogram (-jh)   : When set, save the computed joint-histogram; if one already exists, skip reading it, recompute it, and overwrite
                                      it (default: false)
- --sample-names STRING[]           : name1 ... nameN
+ --sample-names STRING[]           : name1,…,nameN
  --split-size path                 : Maximum HDFS split size (default: None)
  -h (-help, --help, -?)            : Print help (default: false)
  -print_metrics                    : Print metrics to the log on completion (default: false)
